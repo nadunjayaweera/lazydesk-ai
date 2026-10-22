@@ -331,6 +331,7 @@ app.get("/api/cleanup-plans/:id", (req, res) => {
 app.patch("/api/cleanup-plans/:id/approve", (req, res) => {
   try {
     const { id } = req.params;
+    const { files } = req.body;
 
     const plans = readJson(PLANS_FILE, []);
 
@@ -343,9 +344,36 @@ app.patch("/api/cleanup-plans/:id/approve", (req, res) => {
       });
     }
 
+    const existingPlan = plans[index];
+
+    let updatedFiles = existingPlan.files;
+
+    if (Array.isArray(files) && files.length > 0) {
+      updatedFiles = existingPlan.files.map((existingFile) => {
+        const editedFile = files.find((item) => item.id === existingFile.id);
+
+        if (!editedFile) {
+          return existingFile;
+        }
+
+        return {
+          ...existingFile,
+          suggested_name: String(
+            editedFile.suggested_name || existingFile.suggested_name,
+          ).trim(),
+
+          folder: String(editedFile.folder || existingFile.folder).trim(),
+        };
+      });
+    }
+
     plans[index] = {
-      ...plans[index],
+      ...existingPlan,
+
+      files: updatedFiles,
+
       status: "APPROVED",
+
       approved_at: new Date().toISOString(),
     };
 

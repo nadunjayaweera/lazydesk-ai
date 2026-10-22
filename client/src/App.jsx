@@ -15,6 +15,26 @@ function App() {
   const [historyLoading, setHistoryLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const handleUpdateSuggestion = (fileId, field, value) => {
+    setCurrentPlan((previous) => {
+      if (!previous) {
+        return previous;
+      }
+
+      return {
+        ...previous,
+        files: previous.files.map((file) =>
+          file.id === fileId
+            ? {
+                ...file,
+                [field]: value,
+              }
+            : file,
+        ),
+      };
+    });
+  };
+
   const files = useMemo(() => {
     return fileInput
       .split("\n")
@@ -107,6 +127,14 @@ function App() {
         `${API_URL}/api/cleanup-plans/${currentPlan.id}/approve`,
         {
           method: "PATCH",
+
+          headers: {
+            "Content-Type": "application/json",
+          },
+
+          body: JSON.stringify({
+            files: currentPlan.files,
+          }),
         },
       );
 
@@ -498,14 +526,36 @@ proposal-final-final.docx`}
 
                       <div className="file-block suggested-file">
                         <span>Suggested</span>
-                        <strong>{file.suggested_name}</strong>
+                        <input
+                          className="suggestion-edit-input"
+                          type="text"
+                          value={file.suggested_name}
+                          onChange={(event) =>
+                            handleUpdateSuggestion(
+                              file.id,
+                              "suggested_name",
+                              event.target.value,
+                            )
+                          }
+                        />
                       </div>
                     </div>
 
                     <div className="cleanup-meta">
                       <div className="folder-chip">
                         <span>Folder</span>
-                        <strong>{file.folder}</strong>
+                        <input
+                          className="folder-edit-input"
+                          type="text"
+                          value={file.folder}
+                          onChange={(event) =>
+                            handleUpdateSuggestion(
+                              file.id,
+                              "folder",
+                              event.target.value,
+                            )
+                          }
+                        />
                       </div>
 
                       <div
