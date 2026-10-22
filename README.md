@@ -146,6 +146,24 @@ project-final-final-v2.docx
 }
 ```
 
+## Screenshots
+
+### LazyDesk Workspace
+
+![LazyDesk workspace](docs/screenshots/01-workspace.png)
+
+### AI Cleanup Plan
+
+![LazyDesk cleanup plan](docs/screenshots/02-cleanup-plan.png)
+
+### Edit AI Suggestions
+
+![LazyDesk edit suggestion](docs/screenshots/03-edit-suggestion.png)
+
+### Cleanup History
+
+![LazyDesk cleanup history](docs/screenshots/04-cleanup-history.png)
+
 ---
 
 # Lazy Mode
